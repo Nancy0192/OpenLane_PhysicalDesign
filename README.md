@@ -43,3 +43,23 @@ One of OpenLane's key features is its open-source nature, which promotes collabo
 
   
 </details>
+
+## Day-2 Good Floorplan vs Bad Floorplan And Introduction To Library Cells
+
+<details><summary><strong>Chi Floor Planning Considerations</strong></summary>
+
+### Utilization Factor
+The Utilization Factor in ASIC (Application-Specific Integrated Circuit) design flow is a metric that measures how efficiently the physical area of the chip is being utilized. It represents the ratio of the occupied area (the area filled with logic, standard cells, and other components) to the total available area on the semiconductor core.<br>
+Try to set the utilisation factor 0.5 or 0.6 so that there will be space for optimisations, routing, inserting buffers etc.,
+
+### Aspect Ratio
+The Aspect Ratio is defined as the ratio of height to the width of the die. If it is '1', it implies that the die is of square shape.
+
+### Pre-placed Cells
+Pre-placed cells (or pre-placed blocks) in ASIC (Application-Specific Integrated Circuit) design refer to predefined and fixed blocks of logic or circuitry that are manually placed in specific locations on the semiconductor chip's layout before the automated placement and routing process.<br>
+Pre-placed cells are designed with specific functionality in mind and are placed on the chip layout at precise locations. These cells typically perform critical functions that require precise control over their placement and connectivity.
+
+### Decoupling Capacitor 
+
+  
+</details>
