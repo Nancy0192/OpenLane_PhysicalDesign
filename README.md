@@ -60,6 +60,29 @@ Pre-placed cells (or pre-placed blocks) in ASIC (Application-Specific Integrated
 Pre-placed cells are designed with specific functionality in mind and are placed on the chip layout at precise locations. These cells typically perform critical functions that require precise control over their placement and connectivity.
 
 ### Decoupling Capacitor 
+Decoupling capacitors help maintain a constant voltage level at the power supply pins of ICs. When an IC switches or draws transient current, the decoupling capacitor supplies the required charge to keep the voltage stable, preventing glitches or erratic behavior.
+
+### Power Planning
+Let us suppose that there are multiple macros in a chip and output changes from '1' to '0', then it discharged into ground line because of which we can see ground bumpp. Similarly when it is charged from 0 to 1 we can see voltage droop in power supply.<br>
+Hence to resolve this we can have multiple supply line for vdd as well as ground as shown below:
+
+
+
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/d016b55b-0ae0-41f8-abd7-f06556235e88)
+
+### Pin Placement
+Let us suppose we have following design:
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/e44da8f1-0d2f-4d71-9bb2-b9ab92718d0f)
+
+Now we have to place the pins in the chip as shown below:
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/f788f55c-2875-4c8f-ae81-c39fc8ab4722)
+
+The Clock port are bigger than the normal I/O pins because of it's continuous use and larger area offers less resistance.
+
+
+
 
   
 </details>
