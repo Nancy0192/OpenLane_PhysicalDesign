@@ -211,6 +211,7 @@ gedit 1-synthesis.AREA_0.stat.rpt
 Flop ratio = Number of D Flip flops = 1596  = 0.1579
              ______________________   _____
              Total Number of cells    10104
+```
 
 
 
