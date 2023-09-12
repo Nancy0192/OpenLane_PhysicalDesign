@@ -44,6 +44,177 @@ One of OpenLane's key features is its open-source nature, which promotes collabo
   
 </details>
 
+<details><summary><strong>Invoking OpenLane And Run Synthesis</strong></summary>
+
+<details><summary>Installation Of Docker</summary>
+
+```
+sudo apt install apt-transport-https ca-certificates curl software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+sudo apt update
+sudo apt install docker-ce docker-ce-cli containerd.io
+sudo docker run hello-world
+
+sudo groupadd docker
+sudo usermod -aG docker $USER
+sudo reboot 
+
+
+# Check for installation
+sudo docker run hello-world
+```
+
+
+
+</details>
+<details><summary>Installation Of OpenLane</summary>
+
+```
+cd
+git clone https://github.com/The-OpenROAD-Project/OpenLane --recurse-submodules 
+cd OpenLane
+make
+make test
+cd /home/kanish/OpenLane/designs/ci
+cp -r * ../
+```
+</details>
+
+<details><summary>Invoking OpenLane</summary>
+  
+```
+cd ~/OpenLane
+make mount
+```
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/81d0b632-725e-49f0-890a-67d5cf05f65a)
+
+</details>
+
+<details><summary>Running Synthesis</summary>
+
+```
+cd ~/OpenLane
+make mount
+./flow.tcl -interactive
+package require openlane 0.9
+prep -design picorv32a
+run_synthesis
+```
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/b03b2fe1-ccd6-4816-91f3-35d85b617881)
+
+
+To view synthesis report
+
+```
+cd OpenLane/designs/picorv32a/runs/RUN_2023.09.12_13.52.53/reports/synthesis/
+gedit 1-synthesis.AREA_0.stat.rpt
+```
+
+```
+
+61. Printing statistics.
+
+=== picorv32 ===
+
+   Number of wires:               9824
+   Number of wire bits:          10206
+   Number of public wires:        1512
+   Number of public wire bits:    1894
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:              10104
+     sky130_fd_sc_hd__a2111o_2       2
+     sky130_fd_sc_hd__a211o_2      101
+     sky130_fd_sc_hd__a211oi_2       4
+     sky130_fd_sc_hd__a21bo_2       19
+     sky130_fd_sc_hd__a21boi_2       7
+     sky130_fd_sc_hd__a21o_2       414
+     sky130_fd_sc_hd__a21oi_2      127
+     sky130_fd_sc_hd__a221o_2       65
+     sky130_fd_sc_hd__a221oi_2       1
+     sky130_fd_sc_hd__a22o_2       197
+     sky130_fd_sc_hd__a22oi_2        2
+     sky130_fd_sc_hd__a2bb2o_2      16
+     sky130_fd_sc_hd__a311o_2       38
+     sky130_fd_sc_hd__a31o_2        90
+     sky130_fd_sc_hd__a31oi_2       10
+     sky130_fd_sc_hd__a32o_2        89
+     sky130_fd_sc_hd__a41o_2         2
+     sky130_fd_sc_hd__and2_2       283
+     sky130_fd_sc_hd__and2b_2       32
+     sky130_fd_sc_hd__and3_2        77
+     sky130_fd_sc_hd__and3b_2       76
+     sky130_fd_sc_hd__and4_2        46
+     sky130_fd_sc_hd__and4b_2        6
+     sky130_fd_sc_hd__and4bb_2       3
+     sky130_fd_sc_hd__buf_1       2735
+     sky130_fd_sc_hd__buf_2         16
+     sky130_fd_sc_hd__conb_1       106
+     sky130_fd_sc_hd__dfxtp_2     1596
+     sky130_fd_sc_hd__inv_2         83
+     sky130_fd_sc_hd__mux2_2      1817
+     sky130_fd_sc_hd__mux4_2       323
+     sky130_fd_sc_hd__nand2_2      250
+     sky130_fd_sc_hd__nand2b_2       2
+     sky130_fd_sc_hd__nand3_2       18
+     sky130_fd_sc_hd__nand3b_2       3
+     sky130_fd_sc_hd__nand4_2        2
+     sky130_fd_sc_hd__nor2_2       185
+     sky130_fd_sc_hd__nor3_2        11
+     sky130_fd_sc_hd__nor3b_2        3
+     sky130_fd_sc_hd__nor4_2         4
+     sky130_fd_sc_hd__nor4b_2        3
+     sky130_fd_sc_hd__o2111a_2       1
+     sky130_fd_sc_hd__o211a_2      224
+     sky130_fd_sc_hd__o211ai_2       6
+     sky130_fd_sc_hd__o21a_2       154
+     sky130_fd_sc_hd__o21ai_2       94
+     sky130_fd_sc_hd__o21ba_2       15
+     sky130_fd_sc_hd__o21bai_2       3
+     sky130_fd_sc_hd__o221a_2       19
+     sky130_fd_sc_hd__o221ai_2       1
+     sky130_fd_sc_hd__o22a_2        26
+     sky130_fd_sc_hd__o22ai_2        1
+     sky130_fd_sc_hd__o2bb2a_2       7
+     sky130_fd_sc_hd__o311a_2       31
+     sky130_fd_sc_hd__o311ai_2       2
+     sky130_fd_sc_hd__o31a_2        21
+     sky130_fd_sc_hd__o31ai_2        2
+     sky130_fd_sc_hd__o32a_2        14
+     sky130_fd_sc_hd__o41a_2         1
+     sky130_fd_sc_hd__or2_2        337
+     sky130_fd_sc_hd__or2b_2        20
+     sky130_fd_sc_hd__or3_2        102
+     sky130_fd_sc_hd__or3b_2        17
+     sky130_fd_sc_hd__or4_2         29
+     sky130_fd_sc_hd__or4b_2         6
+     sky130_fd_sc_hd__xnor2_2       78
+     sky130_fd_sc_hd__xor2_2        29
+
+   Chip area for module '\picorv32': 102957.494400
+```
+
+
+
+
+
+
+
+</details>
+
+
+
+
+
+
+
+</details>
+
 ## Day-2 Good Floorplan vs Bad Floorplan And Introduction To Library Cells
 
 <details><summary><strong>Chi Floor Planning Considerations</strong></summary>
