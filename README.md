@@ -111,6 +111,15 @@ To view synthesis report
 
 ```
 cd OpenLane/designs/picorv32a/runs/RUN_2023.09.12_13.52.53/reports/synthesis/
+gedit 1-synthesis_dff.stat 
+```
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/e2336b5a-c91c-4f92-a4eb-74c731b4d890)
+
+
+
+```
+cd OpenLane/designs/picorv32a/runs/RUN_2023.09.12_13.52.53/reports/synthesis/
 gedit 1-synthesis.AREA_0.stat.rpt
 ```
 
@@ -198,7 +207,10 @@ gedit 1-synthesis.AREA_0.stat.rpt
 
    Chip area for module '\picorv32': 102957.494400
 ```
-
+```
+Flop ratio = Number of D Flip flops = 1596  = 0.1579
+             ______________________   _____
+             Total Number of cells    10104
 
 
 
