@@ -230,7 +230,7 @@ Flop ratio = Number of D Flip flops = 1596  = 0.1579
 
 ## Day-2 Good Floorplan vs Bad Floorplan And Introduction To Library Cells
 
-<details><summary><strong>Chi Floor Planning Considerations</strong></summary>
+<details><summary><strong>Chip Floor Planning Considerations</strong></summary>
 
 ### Utilization Factor
 The Utilization Factor in ASIC (Application-Specific Integrated Circuit) design flow is a metric that measures how efficiently the physical area of the chip is being utilized. It represents the ratio of the occupied area (the area filled with logic, standard cells, and other components) to the total available area on the semiconductor core.<br>
@@ -264,6 +264,41 @@ Now we have to place the pins in the chip as shown below:
 ![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/f788f55c-2875-4c8f-ae81-c39fc8ab4722)
 
 The Clock port are bigger than the normal I/O pins because of it's continuous use and larger area offers less resistance.
+
+<details><summary><strong>Steps To Run Floorplan and Placement</strong></summary>
+  
+### Floorplanning
+Command:
+
+```
+run_floorplan
+```
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/ba13b068-b64d-427b-80ef-09fc14bab3e3)
+
+To view the floorplanning in magic:
+
+```
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/60c2f9cd-5ea1-4de9-be73-7e340f56fc1a)
+
+
+
+
+
+</details>
 
 
 
