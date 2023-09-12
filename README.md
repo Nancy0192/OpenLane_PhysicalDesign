@@ -279,7 +279,11 @@ To view the floorplanning in magic:
 
 ```
 
+magic  /home/nancy/.volare/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.nom.lef def read picorv32.def &
+
 ```
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/163c44a0-65db-46f3-ab1f-914b5e7fd135)
 
 
 
