@@ -278,22 +278,32 @@ run_floorplan
 To view the floorplanning in magic:
 
 ```
-
+cd OpenLane/designs/picorv32a/runs/RUN_2023.09.12_13.52.53/results/floorplan/
 magic  /home/nancy/.volare/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.nom.lef def read picorv32.def &
 
 ```
 
 ![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/163c44a0-65db-46f3-ab1f-914b5e7fd135)
 
+### Placement
+
+Command:
+
+```
+run_placement
+```
 
 
 
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/234e070e-d0d5-41e2-a458-1f8214b95902)
 
 
+To view placement :
 
-
-
-
+```
+cd OpenLane/designs/picorv32a/runs/RUN_2023.09.12_13.52.53/results/placement/
+magic /home/nancy/.volare/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.nom.lef def read picorv32.def &
+```
 
 
 ![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/60c2f9cd-5ea1-4de9-be73-7e340f56fc1a)
