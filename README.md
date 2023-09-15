@@ -248,6 +248,13 @@ Decoupling capacitors help maintain a constant voltage level at the power supply
 
 ### Power Planning
 Let us suppose that there are multiple macros in a chip and output changes from '1' to '0', then it discharged into ground line because of which we can see ground bumpp. Similarly when it is charged from 0 to 1 we can see voltage droop in power supply.<br>
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/6cc77d51-cb10-42ce-86ce-8e1625fae6c1)
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/f386b46d-c198-4bea-89df-e0b08d91657a)
+
+
+
 Hence to resolve this we can have multiple supply line for vdd as well as ground as shown below:
 
 
@@ -313,9 +320,163 @@ magic /home/nancy/.volare/sky130A/libs.tech/magic/sky130A.tech lef read ../../tm
 
 
 </details>
+</details>
 
+<details><summary><strong>Library Binding And Placement</strong></summary>
+
+### Netlist Binding
+In ASIC (Application-Specific Integrated Circuit) design, a netlist is a critical representation of the electronic components and their interconnections within the chip. Netlist binding is a crucial step in the ASIC design flow, which involves mapping the logical components described in a high-level hardware description language (HDL) like Verilog or VHDL to physical components in the target technology library. <br>
+Netlist binding is the step where the gate-level netlist is mapped to the physical cells in the technology library. The synthesis tool selects specific cells from the library to implement each gate in the netlist. This mapping is done based on various factors such as timing constraints, area constraints, and power considerations.
+
+
+### Initial Design
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/08613bef-1b46-4bb8-9f27-5346f73f5e69)
+
+### Final Optimized Design
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/cb19310d-480e-4e27-ba2b-eb908b602d8b)
 
 
 
   
 </details>
+
+
+
+
+
+
+<details><summary><strong>Cell Design And Characterization Flow</strong></summary>
+
+### Cell Design
+
+The standard cell design flow is a structured process used to create custom digital integrated circuits. It encompasses several key stages, starting with inputs and culminating in various outputs. Here's a rephrased breakdown of the standard cell design flow:
+
+**Inputs**:
+
+1. **Process Design Kits (PDKs)**: These are provided by semiconductor foundries and contain essential information about the target manufacturing process, including standard cell libraries and design rules.
+
+2. **DRC & LVS Rules**: Design Rule Checking (DRC) and Layout vs. Schematic (LVS) rules are guidelines that ensure the design adheres to manufacturing and electrical specifications.
+
+3. **SPICE Models**: These are mathematical representations of electronic components used for simulation and verification.
+
+4. **Libraries**: Standard cell libraries with pre-designed logic gates and flip-flops are crucial building blocks for the design.
+
+5. **User-Defined Specifications**: Design requirements and constraints set by the designer, such as performance targets, power budget, and functionality.
+
+**Design Steps**:
+
+1. **Circuit Design**: Creating the logical representation of the circuit using hardware description languages (HDLs) like Verilog or VHDL, taking into account the provided libraries and user-defined specifications.
+
+2. **Layout Design**: Translating the logical circuit into a physical layout using layout design techniques. This includes considerations like Euler's path and stick diagrams to optimize for area and performance.
+
+3. **Extraction of Parasitics**: Extracting parasitic elements (such as capacitance and resistance) from the layout to refine the circuit's performance simulation.
+
+4. **Characterization**: Evaluating the circuit's behavior under various conditions, including timing analysis (setup and hold times), noise analysis, and power consumption estimation.
+
+**Outputs**:
+
+1. **Circuit Description Language (CDL)**: A human-readable or machine-readable representation of the circuit, often used for simulation and documentation.
+
+2. **Library Exchange Format (LEF)**: A file format that defines the physical properties of standard cells and facilitates the integration of these cells into the chip's layout.
+
+3. **GDSII**: A file format used to describe the final layout of the chip in a format that can be sent to the semiconductor foundry for manufacturing.
+
+4. **Extracted SPICE Netlist (.cir)**: A netlist that includes parasitic elements extracted from the layout, used for more accurate electrical simulations.
+
+5. **Timing, Noise, and Power .lib Files**: Libraries containing information on the timing characteristics, noise margins, and power consumption of the designed cells, essential for further chip-level analysis and integration.
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/13d62dd0-6fae-4e88-a85b-7733fae9b0c1)
+
+### Characterisation Flow
+
+The standard cell characterization flow typically involves a structured series of steps to determine the electrical behavior and performance characteristics of individual standard cells within an ASIC design. This process is essential for accurately modeling the cells' behavior under various conditions. Here's a rephrased breakdown of the typical standard cell characterization flow:
+
+**1. Model and Technology Data Setup**:
+   - Import semiconductor process technology files (tech files) and the transistor-level models (usually SPICE models) for the standard cells.
+
+**2. Read Extracted Spice Netlist**:
+   - Input the extracted SPICE netlist that represents the specific standard cell to be characterized.
+
+**3. Behavior Recognition**:
+   - Identify and understand the expected behavior and functionality of the standard cell being characterized.
+
+**4. Subcircuit Handling**:
+   - Handle any subcircuits or hierarchical structures within the cell design, ensuring accurate simulation.
+
+**5. Power Source Attachment**:
+   - Connect appropriate power sources to the standard cell to simulate its behavior under different supply voltages and conditions.
+
+**6. Characterization Setup**:
+   - Configure the characterization setup, including specifying input stimulus patterns, test vectors, and conditions for the simulations.
+
+**7. Output Load Configuration**:
+   - Define and apply the necessary output capacitance loads to simulate the cell's response to different output loading conditions.
+
+**8. Simulation Commands**:
+   - Set up and execute simulation commands for the standard cell, which may include transient simulations, DC analyses, or other relevant simulation types.
+
+**9. GUNA Software Integration**:
+   - Utilize open-source software like GUNA to automate and streamline the characterization process.
+   - Feed the data from steps 1 through 8 into the GUNA software.
+
+**10. Model Generation**:
+    - Use the GUNA software to generate comprehensive models for the standard cell, including timing models (setup time, hold time, propagation delay), noise models (noise margins, sensitivity to noise), and power models (static power, dynamic power).
+
+**11. Model Validation**:
+    - Verify and validate the generated models against simulation results to ensure accuracy and reliability.
+
+**12. Documentation and Reporting**:
+    - Document the generated models and their characteristics for future use in ASIC design.
+    - Create reports summarizing the characterization results and models.
+
+By following this standardized flow and using tools like GUNA, designers can efficiently characterize standard cells, which are essential building blocks in ASIC designs. These models are crucial for accurate timing analysis, power estimation, and noise margin assessments in the overall ASIC design process.
+
+
+</details>
+
+<details><summary><strong>Timing Characterization Parameters</strong></summary>
+  
+#### Timing threshold definitions 
+Timing defintion |	Value
+-------------- | --------------
+slew_low_rise_thr	| 20% value
+slew_high_rise_thr | 80% value
+slew_low_fall_thr |	20% value
+slew_high_fall_thr |	80% value
+in_rise_thr	| 50% value
+in_fall_thr |	50% value
+out_rise_thr |	50% value
+out_fall_thr | 50% value
+
+#### Propagation Delay and Transition Time 
+
+**Propagation Delay** 
+The time difference between when the transitional input reaches 50% of its final value and when the output reaches 50% of its final value. Poor choice of threshold values lead to negative delay values. Even thought you have taken good threshold values, sometimes depending upon how good or bad the slew, the dealy might be still +ve or -ve.
+
+```
+Propagation delay = time(out_thr) - time(in_thr)
+```
+**Transition Time**
+
+The time it takes the signal to move between states is the transition time , where the time is measured between 10% and 90% or 20% to 80% of the signal levels.
+
+```
+Rise transition time = time(slew_high_rise_thr) - time (slew_low_rise_thr)
+
+Low transition time = time(slew_high_fall_thr) - time (slew_low_fall_thr)
+```
+
+
+
+</details>
+
+
+
+
+
+
+
+  
+
