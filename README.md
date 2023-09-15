@@ -473,6 +473,103 @@ Low transition time = time(slew_high_fall_thr) - time (slew_low_fall_thr)
 </details>
 
 
+### Day-2 Design Library Cell using magic layout and ngspice charcterization
+
+<details><summary><strong>Lab For CMOS Inverter </strong></summary>
+
+### Spice Deck Creation
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/4cf35a52-e98a-4e58-bc54-948b255fbea2)
+
+Spice Deck for above :
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/755586da-9522-4f12-ab35-b457a64e317d)
+
+### Spice Simulation
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/c9f1274a-1418-4ba5-9332-8c0c9b692d11)
+
+
+### Switching Threshold
+
+The switching threshold of a CMOS inverter occurs at the point on its transfer characteristic where the input voltage (Vin) matches the output voltage (Vout), denoted as Vm. This specific threshold results in both the PMOS and NMOS transistors being in an active state, which can lead to the generation of a leakage current.
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/4ba63234-bb49-44c2-8146-985150da73fc)
+
+
+
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/cbd5f6c0-45c5-4fb8-b0cf-420f96c981c8)
+
+
+
+</details>
+
+<details><summary><strong>Inception Of Layout </strong></summary>
+  
+### CMOS Fabrication Process
+
+The 16-mask CMOS fabrication process involves a series of critical steps to create integrated circuits. Here's a simplified overview:
+
+1. **Substrate Selection**: Choose the appropriate material for the semiconductor substrate, typically silicon.
+
+2. **Active Region Formation**: Isolate active regions where transistors will be built by depositing layers of silicon dioxide (SiO2) and silicon nitride (Si3N4). Use photolithography and etching techniques to define these regions.
+
+3. **N-Well and P-Well Formation**: Introduce impurities through ion implantation, such as boron for P-wells and phosphorus for N-wells, to create the necessary regions for NMOS and PMOS transistors.
+
+4. **Gate Terminal Formation**: Create the gate terminals for NMOS and PMOS transistors using photolithography techniques.
+
+5. **Lightly Doped Drain (LDD) Formation**: Form LDD regions to prevent the hot electron effect in transistors.
+
+6. **Source and Drain Formation**: Add screen oxide to prevent ion channeling during implantation. Implant arsenic to form the source and drain regions. Annealing helps activate these regions.
+
+7. **Local Interconnect Formation**: Remove the screen oxide layer using hydrofluoric acid (HF) etching. Deposit titanium (Ti) for low-resistance electrical contacts.
+
+8. **Higher-Level Metal Formation**: Achieve planarization through chemical mechanical polishing (CMP). Deposit layers of titanium nitride (TiN) and tungsten to form higher-level metal interconnects. Add a top silicon nitride (SiN) layer for chip protection.
+
+These steps represent the major stages in a 16-mask CMOS process, which is essential for building complex integrated circuits with both NMOS and PMOS transistors. This process ensures the precise creation of the various components and connections required for semiconductor devices.
+
+
+### VSDSTDCelldesign 
+
+The Magic layout of a CMOS inverter will be used so as to intergate the inverter with the picorv32a design. To do this, inverter magic file is sourced from vsdstdcelldesign by cloning it within the openlane directory as follows:
+
+```
+cd OpenLane/
+git clone https://github.com/nickson-jose/vsdstdcelldesign
+```
+
+To view the layout of the inverter in magic :
+```
+magic -T ./libs/sky130A.tech sky130_inv.mag &
+```
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/522a7bb6-0325-4b4b-aa21-656598d49a92)
+
+**Identification Of NMOS AND PMOS**
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/0e758480-6ad3-4b51-befd-015935029d7b)
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/8c42ac19-20a9-4453-94ed-f28dc5e9edc1)
+
+**Connectivity Of Source And Drain**
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/b03277f4-a81a-4a1d-b91b-d8ca7878af8e)
+
+
+### Steps To Create Standard Cell and Extract Spice Netlist
+
+
+
+
+
+
+
+</details>
+
+
+
+
 
 
 
