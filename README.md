@@ -640,9 +640,91 @@ magic -d XR met3.mag
 
 ![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/ae5e9997-7333-435c-94e0-cbdcbe37a83c)
 
+Use the following command to see the metal cut:
+
+```
+cif see VIA2
+
+```
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/c73fb5d8-2cfb-452d-875e-f85b7dfa067d)
+
+
+### Lab To Fix poly.9 error in SKY130 Tech File
+
+To load the poly file use the following command:
+
+```
+load poly.mag
+```
+
+The following screen will appear:
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/ef965c8a-2701-4ab8-842d-65d3c64d1df8)
+
+As you see there is som error in it1:
+
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/5a351b31-3503-49e3-9b88-7e9df229edcd)
+
+To rectify these issues, adjustments need to be made in the SKY130 technology file.
+To make the necessary corrections, you should open the SKY130 technology file and perform a search for "poly.9."
+
+You will find the following command :
+
+```
+spacing npres *nsd 480 touching_illegal \
+	"poly.resistor spacing to N-tap < %d (poly.9)"
+```
+
+Now add the another command below this:
+
+```
+spacing npres allpolynonres 480 touching_illegal \
+	"poly.resistor spacing to N-tap < %d (poly.9)"
+```
+
+Similarly, <br>
+
+Search for the following command:
+
+```
+spacing xhrpoly,uhrpoly,xpc alldiff 480 touching_illegal \
+      "xhrpoly/uhrpoly resistor spacing to diffusion < %d (poly.9)"
+```
+And add the following command:
+
+```
+spacing xhrpoly,uhrpoly,xpc allpolynonres 480 touching_illegal \
+      "xhrpoly/uhrpoly resistor spacing to diffusion < %d (poly.9)"
+```
+Now write and quit the tech file 
+To reload the magic layout write the following command:
+
+```
+tech load sky130A.tech
+drc check
+```
+Note: Click on yes inacse any warning appears on the screen.
+
+The modifie layout is shown below:
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/2e2b42a5-0019-4da6-9129-9c3592cf3079)
+
+
+### To Implement Poly Resistor Spacing to Diff and tap
+
+Now copy the three resistor and create ndiffusion and p diffusion regions as shown below:
 
 
 
+
+
+
+
+
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/263b3f07-2489-4bab-93ee-09af68a30c80)
 
 
 
