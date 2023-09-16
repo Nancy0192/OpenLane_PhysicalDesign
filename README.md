@@ -737,7 +737,125 @@ Now copy the three resistor and create ndiffusion and p diffusion regions as sho
 
 
 
+## Day-4 Pre-layout Timing Analysis And Importance Of Good Clock Tree
 
+<details><summary><strong>Timing Modelling Using Delay Tables</strong></summary>
+
+### Coverting Grid Info To Track Info
+
+To meet the requirement for ports, specifically for the CMOS Inverter's A and Y ports located on the li1 layer, it is essential to verify that they are positioned at the intersection of horizontal and vertical tracks. This validation can be achieved by referring to the tracks.info file, which provides information about track pitch and direction.
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/f5353416-ee02-43e5-b171-08553df7531a)
+
+To ensure that the ports are positioned at the intersection point, you should adjust the grid spacing in Magic (tkcon) to match the li1 layer's X and Y values. This alignment between the grid and tracks can be achieved using the following command:
+
+```
+grid 0.46um 0.34um 0.23um 0.17um
+```
+
+Below is the after grid representation:
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/ef657858-6d85-4847-99d1-d30617cbd1dd)
+
+
+### Create Port Definition
+
+After completing the layout, the subsequent step involves extracting an LEF (Library Exchange Format) file for the cell. During this process, it's crucial to configure properties and definitions for the cell's pins to assist the placer and router tools. In LEF files, a cell that includes ports is represented as a macro cell, and these ports are defined as the declared PINs of the macro. The initial step in this procedure is defining the ports and ensuring that the correct class and use attributes are set for each port in compliance with the standard format.
+
+To configure the ports effectively, follow these steps in the Magic console:
+
+1. Load your design's .mag file, specifically the layout for the inverter.
+
+2. Navigate to the "Edit" menu and choose "Text." This will open a dialog box.
+
+3. In the dialog box, double-click on the letter 'S' located at the I/O labels on the layout.
+
+4. The text field will automatically populate with the correct string name and size for the port.
+
+5. To confirm the port definition, ensure that the "Port enable" checkbox is selected, indicating that it functions as a port. Also, make sure that the "Default" checkbox remains unchecked.
+
+6. Your port configuration is now correctly established as depicted in the figure.
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/a4da8676-6002-4402-a1f1-005b6947bd32)
+
+
+### Standard Cell LEF generation
+
+Before the extraction Of LEF file we have to define the function of each port using the following commands:
+
+```
+port A class input
+port A use signal
+
+port Y class output
+port Y use signal
+
+port VPWR class inout
+port VPWR use power
+
+port VGND class inout
+port VPWR use ground
+```
+
+Now extract the LEF file using the following command:
+
+```
+lef write
+```
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/3bc525d3-ded3-446e-b3e3-a91a47dd68ca)
+
+After this there is lef file generated with the same name in the current directory.
+
+### Integrating Custom Cell In OpenLANE
+
+You should copy the extracted LEF file to the picorv32a source directory, and additionally, the sky130_fd_sc_hd_typical.lib file from the vsdstdcelldesign/libs directory should be copied to the dpicorv32a source directory.
+
+```
+cp sky130_vsdinv.lef /home/nancy/OpenLane/designs/picorv32a/src/
+cp sky130_fd_sc_hd__* /home/nancy/OpenLane/designs/picorv32a/src/
+```
+The config.tcl file should also be modified
+
+```
+
+# Design
+set ::env(DESIGN_NAME) "picorv32a"
+
+set ::env(VERILOG_FILES) "$::env(DESIGN_DIR)/src/picorv32a.v"
+
+set ::env(CLOCK_PORT) "clk"
+set ::env(CLOCK_NET) $::env(CLOCK_PORT)
+
+set ::env(GLB_RESIZER_TIMING_OPTIMIZATIONS) {1}
+
+set ::env(LIB_SYNTH) "$::env(OPENLANE_ROOT)/designs/picorv32a/src/sky130_fd_sc_hd__typical.lib"
+set ::env(LIB_SLOWEST) "$::env(OPENLANE_ROOT)/designs/picorv32a/src/sky130_fd_sc_hd__slow.lib"
+set ::env(LIB_FASTEST) "$::env(OPENLANE_ROOT)/designs/picorv32a/src/sky130_fd_sc_hd__fast.lib"
+set ::env(LIB_TYPICAL) "$::env(OPENLANE_ROOT)/designs/picorv32a/src/sky130_fd_sc_hd__typical.lib"
+
+set ::env(EXTRA_LEFS) [glob $::env(OPENLANE_ROOT)/designs/$::env(DESIGN_NAME)/src/*.lef]
+
+set filename $::env(DESIGN_DIR)/$::env(PDK)_$::env(STD_CELL_LIBRARY)_config.tcl
+if { [file exists $filename] == 1} {
+	source $filename
+}
+```
+
+To invoke OpenLANE and run synthesis with the new standard cell library, use the following commands:
+
+```
+set lefs [glob $::env(DESIGN_DIR)/src/*.lef]
+add_lefs -src $lefs
+```
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/437c72c0-346e-4397-8cf7-6ee5c47a36a3)
+
+
+
+
+
+
+
+</details>
 
 
 
