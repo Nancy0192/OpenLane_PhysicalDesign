@@ -849,6 +849,53 @@ add_lefs -src $lefs
 ```
 ![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/437c72c0-346e-4397-8cf7-6ee5c47a36a3)
 
+### Introduction To Delay Tables
+
+Delay is a critical parameter in chip design as it significantly impacts various aspects of timing. The delay of a cell is influenced by its size, threshold voltages, and is often represented as a timing table. Moreover, delay is not fixed; it varies based on input transitions and output loads. For instance, a cell placed at the end of a long wire experiences different delay due to resistance and capacitance compared to the same cell at the end of a short wire. VLSI engineers manage this by employing consistent buffer sizing with varying delays based on load, using "delay tables." These tables contain data for input slew and load capacitance, associated with different buffer sizes, and serve as essential timing models. When algorithms work with these tables, they calculate buffer delays by considering the input slew and load capacitance, utilizing interpolation when precise data isn't available, ensuring accurate timing analysis and signal integrity preservation.
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/7d488a58-6315-466d-b0f1-229ebb910a46)
+
+
+Now we will run the placement
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/84e9187b-31bd-4414-a8c4-1bbca206eac9)
+
+</details>
+
+<details><summary><strong>Timing Analysis with ideal clocks using openSTA </strong></summary>
+	
+### Setup And Hold Time
+
+In digital circuit design, "setup time" and "hold time" are important timing parameters that dictate when valid data must be stable with respect to the clock signal to ensure reliable operation of flip-flops and latches. These parameters are crucial in synchronous digital systems where data must be captured correctly on the rising or falling edge of a clock signal.
+
+Here's an explanation of setup time and hold time:
+
+1. **Setup Time (Tsu)**:
+   - Setup time refers to the minimum amount of time before the clock edge (either rising or falling) at which the input data must be stable and valid.
+   - In other words, it is the time interval before the clock edge during which the data input must remain unchanged for the flip-flop or latch to capture the data correctly.
+   - If the data changes too close to the clock edge, there may not be enough time for the flip-flop to sample the correct value, leading to potential errors.
+
+2. **Hold Time (Th)**:
+   - Hold time is the minimum amount of time after the clock edge during which the input data must remain stable and valid.
+   - It ensures that the data remains unchanged for a specified time after the clock edge to prevent data corruption.
+   - If the data changes too soon after the clock edge, it can lead to a hold time violation and cause unreliable operation.
+
+To summarize, setup time and hold time are timing constraints that ensure data is sampled correctly by flip-flops and latches in digital circuits. Violating these constraints can result in setup and hold time violations, leading to errors in the circuit's operation. Designers need to carefully consider these parameters during the design and timing analysis stages to ensure the reliable and robust operation of their digital systems.
+
+### Clock Jitter
+
+Clock jitter is a critical consideration in digital circuit design, stemming from various factors like circuitry within the clock generator, noise, power supply variations, and interference from surrounding components. In the context of timing closure, design margins must encompass jitter as a significant factor, as it can profoundly impact a circuit's performance.
+
+Period jitter is a key parameter to evaluate clock signal stability. It quantifies the difference between the actual cycle time of a clock signal and the ideal period over a significant number of randomly selected cycles, often around 10,000 cycles. This metric can be expressed either as the average deviation (RMS value) across these cycles or as the difference between the maximum and minimum deviations within the chosen group, referred to as peak-to-peak period jitter. Period jitter assessment is vital to ensure that a clock signal's timing remains stable over a range of operating conditions.
+
+Cycle-to-cycle jitter (C2C) measures the variation between two consecutive clock cycles within a randomly chosen set of cycles, typically around 10,000. Engineers often express C2C jitter as the peak value observed within this group. This measurement helps capture high-frequency jitter variations that can affect a circuit's performance.
+
+In the frequency domain, phase noise is a phenomenon related to clock jitter. It represents rapid, short-lived, random phase variations within a waveform. These fluctuations, when analyzed in the frequency domain, provide valuable insights into a clock signal's quality and stability. Engineers can convert phase noise data into jitter values suitable for digital design analysis.
+
+Understanding and quantifying clock jitter, whether in terms of period jitter, cycle-to-cycle jitter, or phase noise, is essential for designing reliable digital circuits. By addressing and mitigating the causes of jitter and incorporating appropriate design margins, engineers can ensure that their designs meet timing specifications and function reliably under various operating conditions.
+
+
+### 
 
 
 
@@ -857,6 +904,7 @@ add_lefs -src $lefs
 
 </details>
 
+<details></details>
 
 
 
