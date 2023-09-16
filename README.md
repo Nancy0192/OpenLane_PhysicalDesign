@@ -1,5 +1,13 @@
 # OpenLane_PhysicalDesign
 
+### Table of Contents
+- [Day - 1 Inception of Open-Source EDA, OpenLane and Sky130 PDK](#day---1-inception-of-open-source-eda-openlane-and-sky130-pdk)
+- [Day-2 Good Floorplan vs Bad Floorplan And Introduction To Library Cells](#day-2-good-floorplan-vs-bad-floorplan-and-introduction-to-library-cells)
+- [Day-3 Design Library Cell using magic layout and ngspice charcterization](#day-3-design-library-cell-using-magic-layout-and-ngspice-characterization)
+- [Day-4 Pre-layout Timing Analysis And Importance Of Good Clock Tree](#day-4-pre-layout-timing-analysis-and-importance-of-good-clock-tree)
+- [Day-5 Final steps for RTL2GDS using tritonRoute and openSTA](#day-5-final-steps-for-rtl2gds-using-tritonroute-and-opensta)
+- [References](#references)
+
 ## Day - 1 Inception of Open-Source EDA, OpenLane and Sky130 PDK
 <details><summary><strong>Introduction to RISC-V</strong></summary>
 RISC-V is an open-source instruction set architecture (ISA) that has gained significant traction in the world of computer architecture. Unlike proprietary ISAs, RISC-V is freely available for anyone to use, modify, and implement, which has led to its rapid adoption and development. The name "RISC" stands for Reduced Instruction Set Computing, highlighting its design philosophy of simplicity and efficiency.
@@ -904,10 +912,217 @@ Understanding and quantifying clock jitter, whether in terms of period jitter, c
 
 </details>
 
-<details></details>
+<details><summary><strong> Clock tree synthesis TritonCTS and signal integrity </strong></summary>
+
+### Clock Tree Synthesis
+
+The primary goal in constructing a clock tree is to ensure the reliable distribution of the clock signal to all design elements while minimizing clock skew. A commonly used technique in Clock Tree Synthesis (CTS) is the H-tree architecture. When addressing slack issues in a design, you may have noticed changes in the netlist due to cell replacement techniques. It's essential to consider these aspects before proceeding with CTS using the TritonCTS tool.
+
+Clock Tree Synthesis plays a vital role in optimizing clock signal routing resources, reducing the area occupied by clock repeaters, and meeting various timing and power specifications. These specifications encompass factors such as reasonable clock skew, acceptable clock latency, controlled clock transition times, minimum pulse width, adherence to duty cycle requirements for all sequential elements, and keeping clock power consumption within defined limits. Clock skew, in particular, refers to the variation in clock arrival times between different registers.
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/cd913e7d-e0da-441b-9ae4-3a848128a674)
+
+CTS buffering
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/ed005242-ffef-4206-98e1-474e67683bce)
 
 
 
+### Cross talk & Cross Net Shielding
+Crosstalk is an undesirable occurrence where neighboring conductors or interconnects interfere with each other, potentially causing data transmission errors and affecting the operation of integrated circuits (ICs) and electronic systems. This interference can affect both digital and analog circuits, becoming more relevant as ICs become densely populated.
+
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/1e5af18a-7149-4eb0-b953-26a46995a5c3)
+
+
+
+To mitigate the impact of crosstalk and noise on clock signals, a technique known as clock net shielding, or clock tree shielding, is employed in Very Large Scale Integration (VLSI) design. Clock signals play a pivotal role in synchronizing various components within an IC, and maintaining their integrity is essential for the IC's overall performance and reliability.
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/eaae7313-42e9-447a-aadf-0ec997fca8c0)
+
+
+
+### Lab
+
+To run the clock tree synthesis, use the following command
+
+```
+run_cts
+write_verilog ./designs/picorv32a/picorv32a_cts.v
+```
+Since clock buffers are added during the CTS run, buffer delays are now a factor, and real clocks will be used for the remainder of our research. Now, setup and hold time slacks may be examined in OpenROAD's post-CTS STA analysis for the openLANE flow:
+
+Use the following commands:
+
+```
+openroad
+read_lef <path of merge.nom.lef>
+read_def <path of def>
+write_db pico_cts.db
+read_db pico_cts.db
+read_verilog /home/parallels/OpenLane/designs/picorv32a/runs/RUN_09-09_11-20/results/synthesis/picorv32a.v
+read_liberty $::env(LIB_SYNTH_COMPLETE)
+read_sdc /home/parallels/OpenLane/designs/picorv32a/src/my_base.sdc
+set_propagated_clock (all_clocks)
+report_checks -path_delay min_max -format full_clock_expanded -digits 4
+```
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/a9a029b8-c63f-444a-98ec-ea1322a4757b)
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/ad9ff52f-d7fd-4b81-a4c9-2828bcd61133)
+
+
+To check all the clock buffers, use these commands in openlane:
+
+```
+echo $::env(CTS_CLK_BUFFER_LIST)
+set $::env(CTS_CLK_BUFFER_LIST) [lreplace $::env(CTS_CLK_BUFFER_LIST) 0 0]
+echo $::env(CTS_CLK_BUFFER_LIST)
+```
+
+
+
+
+</details>
+
+## Day-5 Final steps for RTL2GDS using tritonRoute and openSTA
+
+<details><summary><strong>Final steps in RTL2GDS</strong></summary>
+	
+### Mazerouting 
+Routing is the process of establishing a physical connection between two pins, and specialized algorithms are used to find the most efficient path between them, ensuring a valid connection.
+
+One such algorithm, the Maze Routing algorithm, like the Lee algorithm, is employed for solving routing problems. It operates on a grid, similar to the one used during cell customization, and begins with source and target points. The Lee algorithm assigns labels to neighboring grid cells around the source, incrementing them in a stepwise manner until reaching the target (e.g., from 1 to 7). This process can yield various path shapes, including L-shaped and zigzag routes. The algorithm typically prefers L-shaped paths over zigzags and resorts to zigzags if no L-shaped routes are available, making it useful for global routing tasks.
+
+However, the Lee algorithm has limitations. It essentially constructs a maze and numbers its cells from source to target, which can be time-consuming for designs with a large number of pins. There are alternative algorithms that tackle similar routing challenges.
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/593a5f7e-2633-4197-aef9-1bf1e8fb5efe)
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/719f52f4-7d64-4c0d-a453-42c1e02b11cb)
+
+
+
+### Design Rule Check
+Design Rule Checking (DRC) is a critical step in the physical design process that assesses whether a specific design aligns with the constraints dictated by the chosen manufacturing process technology. DRC verification is vital to ensure that the design adheres to manufacturing requirements and does not risk chip failure. These process technology rules are typically provided by process engineers or fabrication facilities and vary for each technology. As technology advances and manufacturing nodes shrink, the number and complexity of DRC rules tend to increase. DRC serves as a critical quality assurance measure for the chip's integrity.
+
+DRC examines whether the design complies with the predefined process technology rules set forth by the foundry responsible for manufacturing. This verification process is integral to the physical design flow, guaranteeing that the design aligns with manufacturing specifications and avoids potential chip failures. DRC rules cover various aspects, including physical wire design rules such as minimum wire width, wire spacing, and wire pitch. To address issues like signal short violations, designers may use techniques like adding an additional metal layer and verifying compliance with via-related rules, encompassing via width and via spacing.
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/a95444eb-1483-474a-b580-ac747275aa91)
+
+
+</details>
+
+<details><summary><strong>Power distribution Network And Routing </strong></summary>
+
+The first step in generating the PDN is to plan the power grid. This involves determining the overall power requirements of the chip, including the voltage levels (typically VDD and VSS or ground) and the current needs of different functional blocks.
+The following command is used to check the last stage the design ran:
+
+```
+echo $::env(CURRENT_DEF)
+```
+
+Now run the following command after the cts:
+
+```
+gen_pdn
+```
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/32c093be-4aed-4bfb-bca0-faee6603cf09)
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/b5b69e00-d0d3-49a4-b90f-79d53699929c)
+
+The following diagram shows the power planning:
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/ce75c0e7-0208-4799-bee6-bcfbb9cd8cea)
+
+
+### Routing
+
+Command for routing:
+
+```
+run_routing
+```
+
+Types Of Routing:
+
+In ASIC (Application-Specific Integrated Circuit) design, routing can be categorized into two main types: **Fast Routing** and **Detailed Routing**, each serving a distinct purpose in the physical design process:
+
+1. **Fast Routing**:
+
+   - **Objective**: Fast routing is an initial high-level routing phase that aims to quickly establish a rough layout of the interconnections on the chip.
+   
+   - **Method**: During fast routing, the primary goal is to find a rough path for interconnections between different logic gates or functional blocks. It is a global routing stage that determines the approximate routing paths.
+   
+   - **Speed**: Fast routing is typically faster than detailed routing because it doesn't involve the precise placement of every wire and considers high-level routing tracks.
+   
+   - **Use Cases**: Fast routing is often used early in the design process to get a broad understanding of how different components will be connected. It helps in floorplanning and initial layout exploration.
+
+2. **Detailed Routing**:
+
+   - **Objective**: Detailed routing follows fast routing and aims to provide the precise, layer-by-layer routing of interconnections, considering all design constraints and manufacturing rules.
+   
+   - **Method**: In detailed routing, each wire or trace is carefully routed within the predefined routing tracks, adhering to design rules such as minimum spacing, width, and metal layer usage.
+   
+   - **Precision**: Detailed routing ensures the highest level of precision and manufacturability, as it accounts for all design constraints, signal integrity, and timing requirements.
+   
+   - **Use Cases**: Detailed routing is the final and critical step in the physical design process, where every wire's exact path is determined to meet timing closure and design constraints.
+
+In summary, fast routing provides a quick, high-level layout of interconnections, which is useful for initial design exploration and floorplanning. Detailed routing, on the other hand, offers precise, layer-by-layer routing, ensuring that the design meets all constraints and is ready for manufacturing. These two routing phases complement each other in the ASIC design flow, with fast routing providing an initial layout and detailed routing refining it to meet the required specifications.
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/f94e1623-a1a3-4a78-831f-d2d880348dd8)
+
+
+
+
+
+</details>
+
+<details><summary><strong>Triton Routing Features</strong></summary>
+
+Features of TritonRoute:
+
+1. Honouring pre-processed route guides
+2. Assumes that each net satisfies inter guide connectivity
+3. Uses MILP based panel routing scheme
+4. Intra-layer parallel and inter-layer sequential routing framework
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/d1bc4f2f-32dd-4530-b2f8-510cfff6b9c6)
+
+**Preprocessed Route Guides**
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/2e24ae52-9ed3-4c09-90d1-ac5ffda55b64)
+
+
+**Inter Guide Connectivity And Intra-Inter Layer Routing**
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/a44fe73e-57c7-45cb-89f0-690edd391504)
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/d5e5226c-141d-4861-a291-3af01fcd39c4)
+
+**Handling Connectivity**
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/2c2adb81-8192-46f1-8386-1b31a3293c06)
+
+
+
+
+
+
+
+
+
+
+</details>
+
+
+### References
+1. https://www.vsdiat.com
+2. https://github.com/Devipriya1921/Physical_Design_Using_OpenLANE_Sky130
+3. https://chat.openai.com
+4. http://opencircuitdesign.com/magic/
+5. https://github.com/nickson-jose/vsdstdcelldesign/
+6. https://github.com/The-OpenROAD-Project/OpenLane
+7. https://github.com/Pruthvi-Parate/Advanced_Physical_Design_Using_OpenLANE
 
 
 
