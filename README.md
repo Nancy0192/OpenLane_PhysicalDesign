@@ -473,7 +473,7 @@ Low transition time = time(slew_high_fall_thr) - time (slew_low_fall_thr)
 </details>
 
 
-### Day-2 Design Library Cell using magic layout and ngspice charcterization
+## Day-3 Design Library Cell using magic layout and ngspice charcterization
 
 <details><summary><strong>Lab For CMOS Inverter </strong></summary>
 
@@ -558,6 +558,92 @@ magic -T ./libs/sky130A.tech sky130_inv.mag &
 
 
 ### Steps To Create Standard Cell and Extract Spice Netlist
+
+Following are the commands to extract the spice netlist
+
+```
+extract all
+ext2spice cthresh 0 rthresh 0
+ext2spice
+```
+Following file is created:
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/588f5544-ac09-4cc2-a2d9-5cba37af187c)
+
+
+</details>
+
+<details><summary><strong>Sky130 Tech File Labs</strong></summary>
+  
+After extracting the spice netlist, modify the the netlist as shown below:
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/1648cb73-704e-4105-a47b-62a671d18323)
+
+
+Now run the netlist in ngspice using the following commands as shown below:
+
+```
+ngspice sky130_inv.spice
+```
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/607eb25b-aa5e-4e97-a1ab-4113da363e3c)
+
+
+Now plot the graph
+
+```
+plot y vs time a
+```
+
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/8192db1e-2cef-4c76-9e51-b4a6ac346fe8)
+
+Now zoom and calculate the following parameters:
+
+
+1. Rise transition: Time taken for the output to rise from 20% of max value to 80% of max value
+2. Fall transition- Time taken for the output to fall from 80% of max value to 20% of max value
+3. Cell rise delay = time(50% output rise) - time(50% input fall)
+4. Cell fall delay  = time(50% output fall) - time(50% input rise)
+
+The above timing parameters can be computed by noting down various values from the ngspice waveform.
+
+ ``` 
+ Rise Transition : 2.25421 - 2.18636 = 0.006785 ns / 67.85ps
+ ```
+ ```
+ Fall Transitio : 4.09605 - 4.05554 = 0.04051ns/40.51ps 
+ ```
+ ```
+ Cell Rise Delay : 2.21701 - 2.14989 = 0.06689ns/66.89ps 
+ ```
+ ```
+ Cell Fall Delay : 4.07816 - 4.05011 = 0.02805ns/28.05ps 
+ ```
+
+
+
+### MAGIC DRC
+
+To download the packages from the web and extract it use the following command:
+
+```
+wget http://opencircuitdesign.com/open_pdks/archive/drc_tests.tgz
+tar xfz drc_tests.tgz
+```
+
+Now lets run the met3.mag file on magic and lets see an example of a set of rules failing in the Metal 1 layer could involve errors in the metal layer's patterning, such as shorts or opens, which may disrupt electrical connectivity in an integrated circuit design.
+
+```
+magic -d XR met3.mag
+```
+
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/ae5e9997-7333-435c-94e0-cbdcbe37a83c)
+
+
+
+
+
 
 
 
