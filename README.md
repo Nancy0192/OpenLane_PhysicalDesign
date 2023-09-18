@@ -866,7 +866,9 @@ Delay is a critical parameter in chip design as it significantly impacts various
 
 Now we will run the placement
 
-![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/84e9187b-31bd-4414-a8c4-1bbca206eac9)
+![image](https://github.com/Nancy0192/OpenLane_PhysicalDesign/assets/140998633/8a647d18-0277-461c-8376-fba960f8d0a1)
+
+
 
 </details>
 
